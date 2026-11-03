@@ -24,8 +24,15 @@ pub fn count_neighbors(_grid: &Grid, _row: usize, _col: usize) -> u8 {
 }
 
 // The rule for one cell: does it live in the next generation?
-pub fn next_state(_alive: bool, _neighbors: u8) -> bool {
-    todo!("Implement next_state")
+pub fn next_state(alive: bool, neighbors: u8) -> bool {
+    match (alive, neighbors) {
+     
+        (true, 2..=3) => true,
+        (true, _)     => false,
+        
+        (false, 3)    => true,
+        (false, _)    => false,
+    }
 }
 
 // Debug view: each cell's neighbor count as a digit, one line per row.
