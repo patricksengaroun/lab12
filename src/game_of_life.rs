@@ -88,7 +88,54 @@ pub fn print_neighbor_counts(grid: &Grid) {
 // Set a few cells alive (hardcoded, or entered as `row col` pairs until a blank line),
 // print the grid, then the neighbor counts.
 pub fn play() {
-    todo!("Implement play")
+    use std::io::{self, Write};
+
+    let mut grid: Grid = [[false; 20]; 10];
+
+    grid[4][9] = true;
+    grid[5][9] = true;
+    grid[6][9] = true;
+
+    println!("--- Game of Life ---");
+    println!("Enter row and col pairs separated by a space to add more live cells (e.g., '5 10').");
+    println!("Players count from 1 to 10 (rows) and 1 to 20 (columns).");
+    println!("Press ENTER on a blank line when you are finished setting up.\n");
+
+    loop {
+        print!("Enter 'row col' (or press Enter to finish): ");
+        io::stdout().flush().unwrap();
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+        let trimmed = input.trim();
+
+        if trimmed.is_empty() {
+            break;
+        }
+
+        let coordinates: Vec<&str> = trimmed.split_whitespace().collect();
+        if coordinates.len() == 2 {
+            if let (Ok(u_row), Ok(u_col)) = (coordinates[0].parse::<usize>(), coordinates[1].parse::<usize>()) {
+                
+                if u_row >= 1 && u_row <= 10 && u_col >= 1 && u_col <= 20 {
+                    grid[u_row - 1][u_col - 1] = true;
+                    println!("Live cell placed at row {}, col {}", u_row, u_col);
+                } else {
+                    println!("Error: Boundaries are 1-10 for rows and 1-20 for columns.");
+                }
+            } else {
+                println!("Error: Coordinates must be whole numbers.");
+            }
+        } else {
+            println!("Error: Format must be exactly two numbers separated by a single space.");
+        }
+    }
+
+    println!("\n--- MENU OPTION 6: CURRENT GRID ---");
+    print_grid(&grid);
+
+    println!("\n--- MENU OPTION 6: NEIGHBOR COUNTS ---");
+    print_neighbor_counts(&grid);
 }
 
 #[cfg(test)]
